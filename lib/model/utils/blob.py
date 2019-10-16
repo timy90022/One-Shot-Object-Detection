@@ -96,4 +96,4 @@ def crop(image, purpose, size):
     cropped_image[y_slice, x_slice, :] = cut_image[y0:y1, x0:x1, :]
 
 
-    return cv2.resize(cropped_image, (size,size), interpolation=cv2.INTER_CUBIC)
+    return cv2.resize(cropped_image, (size,size), interpolation=cv2.INTER_LINEAR)

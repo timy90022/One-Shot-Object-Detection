@@ -115,13 +115,11 @@ class roibatchLoader(data.Dataset):
             p /= p.sum()
             choice  = np.random.choice(cand,1,p=p)[0]
 
-        # choice  = random.choice(np.unique(catgory))
-        # blobs['gt_boxes'] = blobs['gt_boxes'][np.where(blobs['gt_boxes'][:,4]==choice)]
+        # Delete useless gt_boxes
         blobs['gt_boxes'][:,-1] = np.where(blobs['gt_boxes'][:,-1]==choice,1,0)
         # Get query image
         query = self.load_query(choice)
     else:
-
         query = self.load_query(index, minibatch_db[0]['img_id'])
 
     data = torch.from_numpy(blobs['data'])
@@ -273,7 +271,8 @@ class roibatchLoader(data.Dataset):
         data = data.permute(0, 3, 1, 2).contiguous().view(3, data_height, data_width)
         im_info = im_info.view(3)
 
-        gt_boxes = torch.FloatTensor([1,1,1,1,1])
+        # gt_boxes = torch.FloatTensor([1,1,1,1,1])
+        gt_boxes = torch.from_numpy(blobs['gt_boxes'])
         choice = self.cat_list[index]
 
         return data, query, im_info, gt_boxes, choice
@@ -285,17 +284,19 @@ class roibatchLoader(data.Dataset):
         all_data = self._query[choice]
         data     = random.choice(all_data)
     else:
+        # Take out the purpose category for testing
         catgory = self.cat_list[choice]
-        # random.seed(id)
+        # list all the candidate image 
         all_data = self._query[catgory]
-            
-        l = list(range(len(all_data)))
 
-        # random.shuffle(l)
-        try:
-            position=l[0]
-        except:
-            position = random.choice(l)
+        # Use image_id to determine the random seed
+        # The list l is candidate sequence, which random by image_id
+        random.seed(id)
+        l = list(range(len(all_data)))
+        random.shuffle(l)
+
+        # choose the candidate sequence and take out the data information
+        position=l[self.query_position%len(l)]
         data     = all_data[position]
 
     # Get image
@@ -311,9 +312,8 @@ class roibatchLoader(data.Dataset):
     # flip the channel, since the original one using cv2
     # rgb -> bgr
     # im = im[:,:,::-1]
-    if random.randint(0,99)/100 > 0.5:
+    if random.randint(0,99)/100 > 0.5 and self.training:
       im = im[:, ::-1, :]
-
 
 
     im, im_scale = prep_im_for_blob(im, cfg.PIXEL_MEANS, cfg.TRAIN.query_size,

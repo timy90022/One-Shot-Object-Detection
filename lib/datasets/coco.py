@@ -154,11 +154,13 @@ class coco(imdb):
     This function loads/saves from/to a cache file to speed up future calls.
     """
     cache_file = osp.join(self.cache_path, self.name + '_gt_roidb.pkl')
+    
     if osp.exists(cache_file):
       with open(cache_file, 'rb') as fid:
         [roidb, self.cat_data] = pickle.load(fid)
       print('{} gt roidb loaded from {}'.format(self.name, cache_file))
       return roidb
+    
 
     gt_roidb = [self._load_coco_annotation(index)
                 for index in self._image_index]
@@ -315,11 +317,7 @@ class coco(imdb):
     cocoEval.accumulate()
     cocoEval.summarize(class_index=tmp)
 
-    # coco_eval = COCOeval(self._COCO, coco_dt)
-    # coco_eval.params.useSegm = (ann_type == 'segm')
-    # coco_eval.evaluate()
-    # coco_eval.accumulate()
-    # self._print_detection_eval_metrics(coco_eval)
+
     eval_file = osp.join(output_dir, 'detection_results.pkl')
     with open(eval_file, 'wb') as fid:
       pickle.dump(cocoEval, fid, pickle.HIGHEST_PROTOCOL)
