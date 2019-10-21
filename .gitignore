@@ -18,7 +18,8 @@ output/
 *.xlsx
 *.png
 compare.py
-
+._.DS_Store
+._README.md
 
 
 ## PyTorch
