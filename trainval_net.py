@@ -65,7 +65,7 @@ def parse_args():
                       default=8, type=int)
   parser.add_argument('--cuda', dest='cuda',
                       help='whether use CUDA',
-                      default=True)
+                      action='store_true')
   parser.add_argument('--g', dest='group',
                       help='which group to train, split coco to four group',
                       default=0)
@@ -73,7 +73,7 @@ def parse_args():
 
   parser.add_argument('--mGPUs', dest='mGPUs',
                       help='whether use multiple GPUs',
-                      default=True)
+                      action='store_true')
   parser.add_argument('--bs', dest='batch_size',
                       help='batch_size',
                       default=128, type=int)
