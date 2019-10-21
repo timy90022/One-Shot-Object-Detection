@@ -16,7 +16,7 @@ output/
 ## Ignore file
 
 *.xlsx
-*.png
+./*.png
 compare.py
 ._.DS_Store
 ._README.md
