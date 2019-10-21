@@ -5,7 +5,7 @@
 This project is a pure pytorch implementation of One-Shot Objection.  
 Code for reproducing results in the following paper:
 
-![Image](images/method.pdf)
+![Image](images/method.png)
 
 [**One-Shot Object Detection with Co-Attention and Co-Excitation**]()  
 Ting-I Hsieh, Yi-Chen Lo, Hwann-Tzong Chen, Tyng-Luh Liu.  
