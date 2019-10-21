@@ -25,7 +25,7 @@ Neural Information Processing Systems (NeurIPS), 2019
 
 First of all, clone the code
 ```
-git clone https://github.com/jwyang/faster-rcnn.pytorch.git
+git clone https://github.com/timy90022/One-Shot-Object-Detection.git
 ```
 
 Then, create a folder:
