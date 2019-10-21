@@ -5,6 +5,8 @@
 This project is a pure pytorch implementation of One-Shot Objection.  
 Code for reproducing results in the following paper:
 
+![Image](images/method.pdf)
+
 [**One-Shot Object Detection with Co-Attention and Co-Excitation**]()  
 Ting-I Hsieh, Yi-Chen Lo, Hwann-Tzong Chen, Tyng-Luh Liu.  
 Neural Information Processing Systems (NeurIPS), 2019
@@ -37,7 +39,7 @@ cd faster-rcnn.pytorch && mkdir data
 * Pytorch 1.0 
 
 ### Data Preparation
-yuu
+
 * **PASCAL_VOC 07+12**: Please follow the instructions in [py-faster-rcnn](https://github.com/rbgirshick/py-faster-rcnn#beyond-the-demo-installation-for-training-and-testing-models) to prepare VOC datasets. Actually, you can refer to any others. After downloading the data, creat softlinks in the folder data/.
 
 * **COCO**: Please also follow the instructions in [py-faster-rcnn](https://github.com/rbgirshick/py-faster-rcnn#beyond-the-demo-installation-for-training-and-testing-models) to prepare the data.
