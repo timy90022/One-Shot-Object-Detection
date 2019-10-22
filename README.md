@@ -2,10 +2,9 @@
 
 ## Introduction
 
-This project is a pure pytorch implementation of One-Shot Objection.  
-Code for reproducing results in the following paper:
-
 ![Image](images/method.png)
+
+This project is a pure pytorch implementation of One-Shot Objection. A lot of code is modified from [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch).  
 
 [**One-Shot Object Detection with Co-Attention and Co-Excitation**]()  
 Ting-I Hsieh, Yi-Chen Lo, Hwann-Tzong Chen, Tyng-Luh Liu.  
@@ -28,10 +27,6 @@ First of all, clone the code
 git clone https://github.com/timy90022/One-Shot-Object-Detection.git
 ```
 
-Then, create a folder:
-```
-cd faster-rcnn.pytorch && mkdir data
-```
 
 ### prerequisites
 
@@ -47,9 +42,9 @@ e scripts provided in this repository.
 
 ### Pretrained Model
 
-We used two pretrained models in our experiments, VGG and ResNet101. You can download these two models from:
+We used two pretrained models in our experiments, ResNet50. You can download these two models from:
 
-* ResNet101: [Dropbox](https://www.dropbox.com/s/iev3tkbz5wyyuz9/resnet101_caffe.pth?dl=0), [VT Server](https://filebox.ece.vt.edu/~jw2yang/faster-rcnn/pretrained-base-models/resnet101_caffe.pth)
+* ResNet50: [VT Server](https://filebox.ece.vt.edu/~jw2yang/faster-rcnn/pretrained-base-models/resnet101_caffe.pth)
 
 Download them and put them into the data/pretrained_model/.
 
@@ -94,7 +89,7 @@ Above, BATCH_SIZE and WORKER_NUMBER can be set adaptively according to your GPU 
 If you have multiple (say 8) Titan Xp GPUs, then just use them all! Try:
 
 ```
-python trainval_net.py --dataset coco --net vgg16 \
+python trainval_net.py --dataset coco --net res50 \
                        --bs $BATCH_SIZE --nw $WORKER_NUMBER \
                    		--lr $LEARNING_RATE --lr_decay_step $DECAY_STEP \
                   		--cuda --g $SPLIT --seen $SEEN --mGPUs
@@ -106,32 +101,16 @@ python trainval_net.py --dataset coco --net vgg16 \
 
 ## Test
 
-If you want to evlauate the detection performance of a pre-trained vgg16 model on pascal_voc test set, simply run
+If you want to evlauate the detection performance of a pre-trained res50 model on coco test set, simply run
 ```
-python test_net.py --dataset pascal_voc --net vgg16 \
+python test_net.py --dataset coco --net res50 \
                    --checksession $SESSION --checkepoch $EPOCH --checkpoint $CHECKPOINT \
-                   --cuda
+                   --cuda --g $SPLIT
 ```
 Specify the specific model session, chechepoch and checkpoint, e.g., SESSION=1, EPOCH=6, CHECKPOINT=416.
 
 
-## Authorship
+## Acknowledgments
 
-This project is equally contributed by [Jianwei Yang](https://github.com/jwyang) and [Jiasen Lu](https://github.com/jiasenlu), and many others (thanks to them!).
+Code is modified from [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch) and [AlexHex7/Non-local_pytorch](https://github.com/AlexHex7/Non-local_pytorch). All credit is attributed to them.
 
-## Citation
-
-    @article{jjfaster2rcnn,
-        Author = {Jianwei Yang and Jiasen Lu and Dhruv Batra and Devi Parikh},
-        Title = {A Faster Pytorch Implementation of Faster R-CNN},
-        Journal = {https://github.com/jwyang/faster-rcnn.pytorch},
-        Year = {2017}
-    }
-
-    @inproceedings{renNIPS15fasterrcnn,
-        Author = {Shaoqing Ren and Kaiming He and Ross Girshick and Jian Sun},
-        Title = {Faster {R-CNN}: Towards Real-Time Object Detection
-                 with Region Proposal Networks},
-        Booktitle = {Advances in Neural Information Processing Systems ({NIPS})},
-        Year = {2015}
-    }
