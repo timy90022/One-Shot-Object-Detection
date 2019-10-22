@@ -84,15 +84,15 @@ CUDA_VISIBLE_DEVICES=$GPU_ID python trainval_net.py \
                    --cuda --g $SPLIT --seen $SEEN
 ```
 
-Above, BATCH_SIZE and WORKER_NUMBER can be set adaptively according to your GPU memory size. **On eight NVIDIA V100 GPUs with 32G memory in parallel , it can be up to 128**.
+Above, BATCH_SIZE and WORKER_NUMBER can be set adaptively according to your GPU memory size. **On NVIDIA V100 GPUs with 32G memory, it can be up to 16 batch size**.
 
-If you have multiple (say 8) Titan Xp GPUs, then just use them all! Try:
+If you have multiple (say 8) V100 GPUs, then just use them all! Try:
 
 ```
 python trainval_net.py --dataset coco --net res50 \
                        --bs $BATCH_SIZE --nw $WORKER_NUMBER \
-                   		--lr $LEARNING_RATE --lr_decay_step $DECAY_STEP \
-                  		--cuda --g $SPLIT --seen $SEEN --mGPUs
+                       --lr $LEARNING_RATE --lr_decay_step $DECAY_STEP \
+                       --cuda --g $SPLIT --seen $SEEN --mGPUs
 
 ```
 
