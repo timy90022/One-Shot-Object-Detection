@@ -125,4 +125,4 @@ Specify the model session, checkepoch and checkpoint, e.g., SESSION=1, EPOCH=6, 
 
 ## Acknowledgments
 
-Code is modified from [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch) and [AlexHex7/Non-local_pytorch](https://github.com/AlexHex7/Non-local_pytorch). 
+Code is based on [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch) and [AlexHex7/Non-local_pytorch](https://github.com/AlexHex7/Non-local_pytorch). 
