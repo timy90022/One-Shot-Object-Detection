@@ -34,33 +34,33 @@ git clone https://github.com/timy90022/One-Shot-Object-Detection.git
 ### 2. Data Preparation
 
 * **COCO**: Please also follow the instructions in [py-faster-rcnn](https://github.com/rbgirshick/py-faster-rcnn#beyond-the-demo-installation-for-training-and-testing-models) to prepare the data.
-e scripts provided in this repository.
+See the scripts provided in this repository.
 
 ### 3. Pretrained Model
 
-We used two pretrained models in our experiments, ResNet50. This pretrained remove all
-COCO-related ImageNet classes by matching the WordNet synsets of ImageNet classes to COCO
-classes, resulting in 933,052 images from the remaining 725 classes, while the original one contains 1,284,168 images of 1000 classes. You can download the models from:
+We use ResNet50 as the pretrained model in our experiments. This pretrained model is trained by excluding all
+COCO-related ImageNet classes, which is acheived via matching the WordNet synsets of ImageNet classes to COCO
+classes. As a result, we keep only 933,052 images from the remaining 725 classes, while the original dataset contains 1,284,168 images of 1000 classes. The pretrained model is available at
 
 * ResNet50: [Google Drive](https://drive.google.com/file/d/1SL9DDezW-neieqxWyNlheNefwgLanEoV/view?usp=sharing)
 
 Download and unzip them into the ../data/
 
-### 4. Reference image
+### 4. Reference images
 
-The reference image only crop out the patches that are enclosed by the predicted bounding boxes of Mask R-CNN and the bounding boxes need to measure the following conditions.
+The reference images are retrieved by cropping out the patches with respect to the predicted bounding boxes of Mask R-CNN, and the bounding boxes need to satisfy the following conditions:
 
 * The IOU threshold    > 0.5
 * The score confidence > 0.7
 
-You can download the models from:
+The reference images are available at
 * Reference file: [Google Drive](https://drive.google.com/file/d/1O1AQtjozgpdtuETGE6X4UItpqcVPUiXH/view?usp=sharing)
 
 Download and unzip them into the ../data/
 
 ### 5. Compilation
 
-This part is the same as the [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch).
+This step can be referred to [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch).
 Install all the python dependencies using pip:
 
 ```bash
@@ -74,7 +74,7 @@ cd lib
 python setup.py build develop
 ```
 
-It will compile all the modules you need, including NMS, ROI_Pooing, ROI_Align and ROI_Crop. The default version is compiled with Python 2.7, please compile by yourself if you are using a different python version.
+It will compile all the modules you need, including NMS, ROI_Pooing, ROI_Align, and ROI_Crop. The default version is compiled with Python 2.7. 
 
 **As pointed out in this [issue](https://github.com/jwyang/faster-rcnn.pytorch/issues/16), if you encounter some error during the compilation, you might miss to export the CUDA paths to your environment.**
 
@@ -82,11 +82,11 @@ It will compile all the modules you need, including NMS, ROI_Pooing, ROI_Align a
 
 Before training, set the right directory to save and load the trained models. Change the arguments "save_dir" and "load_dir" in trainval_net.py and test_net.py to adapt to your environment.
 
-In coco dataset, we split it to 4 group. It will train and test different category. Just to adjust "*--g*".
+In coco dataset, we split it into 4 groups. It will train and test different category. Just to adjust "*--g*".
 
-If you want to train part of dataset, try to modify "*--seen*". When training, use 1 to see train_categories.  When testing, use 2 to see test_categories. If you want to see both, use 3 to seen all categories.
+If you want to train parts of the dataset, try to modify "*--seen*". When training, use 1 to see train_categories.  When testing, use 2 to see test_categories. If you want to see both, use 3 to seen all categories.
 
-To train a model with res50 on coco, simply run:
+To train a model with ResNet50 on COCO, simply run
 
 ```bash
 CUDA_VISIBLE_DEVICES=$GPU_ID python trainval_net.py \
@@ -96,9 +96,9 @@ CUDA_VISIBLE_DEVICES=$GPU_ID python trainval_net.py \
                    --cuda --g $SPLIT --seen $SEEN
 ```
 
-Above, BATCH_SIZE and WORKER_NUMBER can be set adaptively according to your GPU memory size. **On NVIDIA V100 GPUs with 32G memory, it can be up to 16 batch size**.
+Above, BATCH_SIZE and WORKER_NUMBER can be set adaptively according to your GPU memory size. **On NVIDIA V100 GPUs with 32G memory, it can be up to batch size 16**.
 
-If you have multiple (say 8) V100 GPUs, then just use them all! Try:
+If you have multiple (say 8) V100 GPUs, then just use them all! Try
 
 ```bash
 python trainval_net.py --dataset coco --net res50 \
@@ -110,11 +110,10 @@ python trainval_net.py --dataset coco --net res50 \
 
 ## Test
 
-If you want to evlauate the detection performance of res50 model on coco test set.
+If you want to evlauate the detection performance of ResNet50 model on COCO test set, you can train by yourself or download the models from [Google Drive](https://drive.google.com/file/d/1O1AQtjozgpdtuETGE6X4UItpqcVPUiXH/view?usp=sharing) 
+and unzip them into the ```./models/res50/```.
 
-You can train by yourself or download the models from [Google Drive](https://drive.google.com/file/d/1O1AQtjozgpdtuETGE6X4UItpqcVPUiXH/view?usp=sharing) and unzip them into the ```./models/res50/```.
-
-Simply run:
+Simply run
 
 ```bash
 python test_net.py --dataset coco --net res50 \
@@ -122,8 +121,8 @@ python test_net.py --dataset coco --net res50 \
                    --cuda --g $SPLIT
 ```
 
-Specify the specific model session, chechepoch and checkpoint, e.g., SESSION=1, EPOCH=6, CHECKPOINT=416.
+Specify the model session, checkepoch and checkpoint, e.g., SESSION=1, EPOCH=6, CHECKPOINT=416.
 
 ## Acknowledgments
 
-Code is modified from [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch) and [AlexHex7/Non-local_pytorch](https://github.com/AlexHex7/Non-local_pytorch). All credit is attributed to them.
+Code is modified from [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch) and [AlexHex7/Non-local_pytorch](https://github.com/AlexHex7/Non-local_pytorch). 
