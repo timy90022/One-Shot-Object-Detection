@@ -4,7 +4,7 @@
 
 ![Image](images/method.png)
 
-This project is a pure pytorch implementation of One-Shot Objection. A lot of code is modified from [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch).  
+This project is a pure pytorch implementation of *One-Shot Object Detection*. A majority of the code is modified from [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch).  
 
 [**One-Shot Object Detection with Co-Attention and Co-Excitation**]()  
 Ting-I Hsieh, Yi-Chen Lo, Hwann-Tzong Chen, Tyng-Luh Liu.  
