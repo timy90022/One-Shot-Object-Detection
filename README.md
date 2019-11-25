@@ -26,17 +26,17 @@ First of all, clone the code
 git clone https://github.com/timy90022/One-Shot-Object-Detection.git
 ```
 
-### prerequisites
+### 1. Prerequisites
 
 * Python or 3.6
 * Pytorch 1.0
 
-### Data Preparation
+### 2. Data Preparation
 
 * **COCO**: Please also follow the instructions in [py-faster-rcnn](https://github.com/rbgirshick/py-faster-rcnn#beyond-the-demo-installation-for-training-and-testing-models) to prepare the data.
 e scripts provided in this repository.
 
-### Pretrained Model
+### 3. Pretrained Model
 
 We used two pretrained models in our experiments, ResNet50. This pretrained remove all
 COCO-related ImageNet classes by matching the WordNet synsets of ImageNet classes to COCO
@@ -46,7 +46,7 @@ classes, resulting in 933,052 images from the remaining 725 classes, while the o
 
 Download and unzip them into the ../data/
 
-### Reference image
+### 4. Reference image
 
 The reference image only crop out the patches that are enclosed by the predicted bounding boxes of Mask R-CNN and the bounding boxes need to measure the following conditions.
 
@@ -58,17 +58,18 @@ You can download the models from:
 
 Download and unzip them into the ../data/
 
-### Compilation
+### 5. Compilation
 
 This part is the same as the [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch).
 Install all the python dependencies using pip:
-```
+
+```bash
 pip install -r requirements.txt
 ```
 
 Compile the cuda dependencies using following simple commands:
 
-```
+```bash
 cd lib
 python setup.py build develop
 ```
@@ -87,7 +88,7 @@ If you want to train part of dataset, try to modify "*--seen*". When training, u
 
 To train a model with res50 on coco, simply run:
 
-```
+```bash
 CUDA_VISIBLE_DEVICES=$GPU_ID python trainval_net.py \
                    --dataset coco --net res50 \
                    --bs $BATCH_SIZE --nw $WORKER_NUMBER \
@@ -99,7 +100,7 @@ Above, BATCH_SIZE and WORKER_NUMBER can be set adaptively according to your GPU 
 
 If you have multiple (say 8) V100 GPUs, then just use them all! Try:
 
-```
+```bash
 python trainval_net.py --dataset coco --net res50 \
                        --bs $BATCH_SIZE --nw $WORKER_NUMBER \
                        --lr $LEARNING_RATE --lr_decay_step $DECAY_STEP \
@@ -107,21 +108,22 @@ python trainval_net.py --dataset coco --net res50 \
 
 ```
 
-
-
-
 ## Test
 
-If you want to evlauate the detection performance of a pre-trained res50 model on coco test set, simply run
-```
+If you want to evlauate the detection performance of res50 model on coco test set.
+
+You can train by yourself or download the models from [Google Drive](https://drive.google.com/file/d/1O1AQtjozgpdtuETGE6X4UItpqcVPUiXH/view?usp=sharing) and unzip them into the ```./models/res50/```.
+
+Simply run:
+
+```bash
 python test_net.py --dataset coco --net res50 \
                    --checksession $SESSION --checkepoch $EPOCH --checkpoint $CHECKPOINT \
                    --cuda --g $SPLIT
 ```
-Specify the specific model session, chechepoch and checkpoint, e.g., SESSION=1, EPOCH=6, CHECKPOINT=416.
 
+Specify the specific model session, chechepoch and checkpoint, e.g., SESSION=1, EPOCH=6, CHECKPOINT=416.
 
 ## Acknowledgments
 
 Code is modified from [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch) and [AlexHex7/Non-local_pytorch](https://github.com/AlexHex7/Non-local_pytorch). All credit is attributed to them.
-
