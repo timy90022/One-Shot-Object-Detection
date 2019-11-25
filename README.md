@@ -14,42 +14,53 @@ Neural Information Processing Systems (NeurIPS), 2019
 
 - [x] Support tensorboardX.
 - [x] Support pytorch-1.0 (this branch).
-- [ ] Upload the ImageNet pre-trained model.
+- [x] Upload the ImageNet pre-trained model.
 - [ ] Provide pre-trained model.
 - [ ] Train PASCAL_VOC datasets
 
-
 ## Preparation
 
-
 First of all, clone the code
-```
+
+```bash
 git clone https://github.com/timy90022/One-Shot-Object-Detection.git
 ```
-
 
 ### prerequisites
 
 * Python or 3.6
-* Pytorch 1.0 
+* Pytorch 1.0
 
 ### Data Preparation
-
-* **PASCAL_VOC 07+12**: Please follow the instructions in [py-faster-rcnn](https://github.com/rbgirshick/py-faster-rcnn#beyond-the-demo-installation-for-training-and-testing-models) to prepare VOC datasets. Actually, you can refer to any others. After downloading the data, creat softlinks in the folder data/.
 
 * **COCO**: Please also follow the instructions in [py-faster-rcnn](https://github.com/rbgirshick/py-faster-rcnn#beyond-the-demo-installation-for-training-and-testing-models) to prepare the data.
 e scripts provided in this repository.
 
 ### Pretrained Model
 
-We used two pretrained models in our experiments, ResNet50. You can download these two models from:
+We used two pretrained models in our experiments, ResNet50. This pretrained remove all
+COCO-related ImageNet classes by matching the WordNet synsets of ImageNet classes to COCO
+classes, resulting in 933,052 images from the remaining 725 classes, while the original one contains 1,284,168 images of 1000 classes. You can download the models from:
 
-* ResNet50: [VT Server](https://filebox.ece.vt.edu/~jw2yang/faster-rcnn/pretrained-base-models/resnet101_caffe.pth)
+* ResNet50: [Google Drive](https://drive.google.com/file/d/1SL9DDezW-neieqxWyNlheNefwgLanEoV/view?usp=sharing)
 
-Download them and put them into the data/pretrained_model/.
+Download and unzip them into the ../data/
+
+### Reference image
+
+The reference image only crop out the patches that are enclosed by the predicted bounding boxes of Mask R-CNN and the bounding boxes need to measure the following conditions.
+
+* The IOU threshold    > 0.5
+* The score confidence > 0.7
+
+You can download the models from:
+* Reference file: [Google Drive](https://drive.google.com/file/d/1O1AQtjozgpdtuETGE6X4UItpqcVPUiXH/view?usp=sharing)
+
+Download and unzip them into the ../data/
 
 ### Compilation
 
+This part is the same as the [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch).
 Install all the python dependencies using pip:
 ```
 pip install -r requirements.txt
