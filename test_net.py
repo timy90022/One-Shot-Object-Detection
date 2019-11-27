@@ -229,8 +229,6 @@ if __name__ == '__main__':
 
   if args.cuda:
     cfg.CUDA = True
-
-  if args.cuda:
     fasterRCNN.cuda()
 
   start = time.time()
@@ -240,11 +238,8 @@ if __name__ == '__main__':
 
   if vis:
     thresh = 0.05
-    # thresh = 0.93
   else:
     thresh = 0.0
-
-  save_name = 'faster_rcnn_10'
 
 
   output_dir_vu = get_output_dir(imdb_vu, 'faster_rcnn_unseen')
@@ -253,14 +248,14 @@ if __name__ == '__main__':
   dataset_vu = roibatchLoader(roidb_vu, ratio_list_vu, ratio_index_vu, query_vu, 1, imdb_vu.num_classes, training=False, seen=args.seen)
   fasterRCNN.eval()
   for avg in range(args.average):
+    avg = 5
     dataset_vu.query_position = avg
     dataloader_vu = torch.utils.data.DataLoader(dataset_vu, batch_size=1,shuffle=False, num_workers=0,pin_memory=True)
 
     data_iter_vu = iter(dataloader_vu)
 
-    # total quantity of testing images
-    num_images_vu = len(imdb_vu.image_index)
     # total quantity of testing images, each images include multiple detect class
+    num_images_vu = len(imdb_vu.image_index)
     num_detect = len(ratio_index_vu[0])
 
     all_boxes = [[[] for _ in xrange(num_images_vu)]
@@ -269,14 +264,13 @@ if __name__ == '__main__':
     
     _t = {'im_detect': time.time(), 'misc': time.time()}
     det_file = os.path.join(output_dir_vu, 'detections_%d_%d.pkl'%(args.seen, avg))
+    print(det_file)
 
     if os.path.exists(det_file):
       with open(det_file, 'rb') as fid:
         all_boxes = pickle.load(fid)
     else:
-      
       for i,index in enumerate(ratio_index_vu[0]):
-        
         data = next(data_iter_vu)
         im_data.data.resize_(data[0].size()).copy_(data[0])
         query.data.resize_(data[1].size()).copy_(data[1])
@@ -296,7 +290,8 @@ if __name__ == '__main__':
         scores = cls_prob.data
         boxes = rois.data[:, :, 1:5]
 
-
+        
+        # Apply bounding-box regression 
         if cfg.TEST.BBOX_REG:
             # Apply bounding-box regression deltas
             box_deltas = bbox_pred.data
@@ -317,39 +312,35 @@ if __name__ == '__main__':
             # Simply repeat the boxes, once for each class
             pred_boxes = np.tile(boxes, (1, scores.shape[1]))
 
-        pred_boxes /= data[2][0][2].item()
-        gt_boxes_ = gt_boxes.cpu().numpy()
-        gt_boxes_[0][:,-1] = np.where(gt_boxes_[0][:,-1]==float(catgory),20,0)
-        gt_boxes_[0] /= data[2][0][2].item()
 
+        # Resize to original ratio
+        pred_boxes /= data[2][0][2].item()
+
+        # Remove batch_size dimension
         scores = scores.squeeze()
         pred_boxes = pred_boxes.squeeze()
+
+        # Record time
         det_toc = time.time()
         detect_time = det_toc - det_tic
         misc_tic = time.time()
-        if vis and i%1==0:
-          print(i)
-          im = cv2.imread(dataset_vu._roidb[dataset_vu.ratio_index[i]]['image'])
-          cv2.imwrite('./test_img/%d_o.png'%(i), im)
-          im2show = np.copy(im)
-          im2show_ = np.copy(im)
 
+        # Post processing
         inds = torch.nonzero(scores>thresh).view(-1)
-        # if there is det
         if inds.numel() > 0:
+          # remove useless indices
           cls_scores = scores[inds]
-          _, order = torch.sort(cls_scores, 0, True)
           cls_boxes = pred_boxes[inds, :]
-          
           cls_dets = torch.cat((cls_boxes, cls_scores.unsqueeze(1)), 1)
-          # cls_dets = torch.cat((cls_boxes, cls_scores), 1)
+
+          # rearrange order
+          _, order = torch.sort(cls_scores, 0, True)
           cls_dets = cls_dets[order]
+
+          # NMS
           keep = nms(cls_boxes[order, :], cls_scores[order], cfg.TEST.NMS)
           cls_dets = cls_dets[keep.view(-1).long()]
           all_boxes[catgory][index] = cls_dets.cpu().numpy()
-          if vis:
-            im2show_ = vis_detections(im2show_, 'shot', gt_boxes_[0], 0.8)
-            im2show = vis_detections(im2show, 'shot', cls_dets.cpu().numpy(), 0.8)
 
         # Limit to max_per_image detections *over all classes*
         if max_per_image > 0:
@@ -370,7 +361,11 @@ if __name__ == '__main__':
             .format(i + 1, num_detect, detect_time, nms_time))
         sys.stdout.flush()
 
+        # save test image
         if vis and i%1==0:
+          im2show = cv2.imread(dataset_vu._roidb[dataset_vu.ratio_index[i]]['image'])
+          im2show = vis_detections(im2show, 'shot', cls_dets.cpu().numpy(), 0.8)
+
           o_query = data[1][0].permute(1, 2,0).contiguous().cpu().numpy()
           o_query *= [0.229, 0.224, 0.225]
           o_query += [0.485, 0.456, 0.406]
@@ -380,16 +375,13 @@ if __name__ == '__main__':
           (h,w,c) = im2show.shape
           o_query = cv2.resize(o_query, (h, h),interpolation=cv2.INTER_LINEAR)
           im2show = np.concatenate((im2show, o_query), axis=1)
-          im2show_ = np.concatenate((im2show_, o_query), axis=1)
 
           cv2.imwrite('./test_img/%d_d.png'%(i), im2show)
-          cv2.imwrite('./test_img/%d_gt.png'%(i), im2show_)
       
     
       with open(det_file, 'wb') as f:
           pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
       
-    
     print('Evaluating detections')
     imdb_vu.evaluate_detections(all_boxes, output_dir_vu) 
 
