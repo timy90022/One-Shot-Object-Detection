@@ -119,7 +119,7 @@ def parse_args():
   parser.add_argument('--a', dest='average', help='average the top_k candidate samples', default=1, type=int)
   parser.add_argument('--g', dest='group',
                       help='which group want to training/testing',
-                      default=0) 
+                      default=0, type=int) 
   args = parser.parse_args()
   return args
 
@@ -248,7 +248,6 @@ if __name__ == '__main__':
   dataset_vu = roibatchLoader(roidb_vu, ratio_list_vu, ratio_index_vu, query_vu, 1, imdb_vu.num_classes, training=False, seen=args.seen)
   fasterRCNN.eval()
   for avg in range(args.average):
-    avg = 5
     dataset_vu.query_position = avg
     dataloader_vu = torch.utils.data.DataLoader(dataset_vu, batch_size=1,shuffle=False, num_workers=0,pin_memory=True)
 
@@ -263,7 +262,10 @@ if __name__ == '__main__':
 
     
     _t = {'im_detect': time.time(), 'misc': time.time()}
-    det_file = os.path.join(output_dir_vu, 'detections_%d_%d.pkl'%(args.seen, avg))
+    if args.group != 0:
+      det_file = os.path.join(output_dir_vu, 'sess%d_g%d_seen%d_%d.pkl'%(args.checksession, args.group, args.seen, avg))
+    else:
+      det_file = os.path.join(output_dir_vu, 'sess%d_seen%d_%d.pkl'%(args.checksession, args.seen, avg))
     print(det_file)
 
     if os.path.exists(det_file):
