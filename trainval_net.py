@@ -173,7 +173,7 @@ if __name__ == '__main__':
 
 
   args.cfg_file = "cfgs/{}_{}.yml".format(args.net, args.group) if args.group != 0 else "cfgs/{}.yml".format(args.net)
-
+  
 
   if args.cfg_file is not None:
     cfg_from_file(args.cfg_file)
@@ -245,11 +245,7 @@ if __name__ == '__main__':
     pdb.set_trace()
 
   fasterRCNN.create_architecture()
-
-  lr = cfg.TRAIN.LEARNING_RATE
   lr = args.lr
-  #tr_momentum = cfg.TRAIN.MOMENTUM
-  #tr_momentum = args.momentum
 
   params = []
   for key, value in dict(fasterRCNN.named_parameters()).items():
@@ -266,7 +262,6 @@ if __name__ == '__main__':
   if args.optimizer == "adam":
     lr = lr * 0.1
     optimizer = torch.optim.Adam(params)
-
   elif args.optimizer == "sgd":
     optimizer = torch.optim.SGD(params, momentum=cfg.TRAIN.MOMENTUM)
 
