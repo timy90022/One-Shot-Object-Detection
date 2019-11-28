@@ -82,9 +82,13 @@ It will compile all the modules you need, including NMS, ROI_Pooing, ROI_Align, 
 
 Before training, set the right directory to save and load the trained models. Change the arguments "save_dir" and "load_dir" in trainval_net.py and test_net.py to adapt to your environment.
 
-In coco dataset, we split it into 4 groups. It will train and test different category. Just to adjust "*--g*".
+In coco dataset, we split it into 4 groups. It will train and test different category. Just to adjust "*--g*"(1~4). If you want to train other settings, you should sepcify "*--g 0*"
 
-If you want to train parts of the dataset, try to modify "*--seen*". When training, use 1 to see train_categories.  When testing, use 2 to see test_categories. If you want to see both, use 3 to seen all categories.
+If you want to train parts of the dataset, try to modify "*--seen*". 
+
+* 1 --> Training, session see train_categories(config file) class
+* 2 --> Testing, session see test_categories(config file) class
+* 3 --> session see train_categories + test_categories class
 
 To train a model with ResNet50 on COCO, simply run
 
