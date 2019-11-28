@@ -117,11 +117,25 @@ Simply run
 
 ```bash
 python test_net.py --dataset coco --net res50 \
-                   --checksession $SESSION --checkepoch $EPOCH --checkpoint $CHECKPOINT \
+                   --s $SESSION --checkepoch $EPOCH --p $CHECKPOINT \
                    --cuda --g $SPLIT
 ```
 
-Specify the model session, checkepoch and checkpoint, e.g., SESSION=1, EPOCH=6, CHECKPOINT=416.
+Specify the model session, checkepoch and checkpoint, e.g., SESSION=1, EPOCH=10, CHECKPOINT=1663.
+
+If you want to test our model checkpoint, simple run  
+
+For coco first group:
+
+```bash
+python test_net.py --s 1  --g 1 --a 4 --cuda
+```
+
+For coco second group:
+
+```bash
+python test_net.py --s 2  --g 2 --a 4 --cuda
+```
 
 ## Acknowledgments
 

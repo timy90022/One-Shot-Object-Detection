@@ -89,7 +89,7 @@ def parse_args():
                       type=str)
   parser.add_argument('--cuda', dest='cuda',
                       help='whether use CUDA',
-                      default=True)
+                      action='store_true')
   parser.add_argument('--ls', dest='large_scale',
                       help='whether use large imag scale',
                       action='store_true')
