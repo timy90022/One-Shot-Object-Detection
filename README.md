@@ -13,8 +13,8 @@ Neural Information Processing Systems (NeurIPS), 2019
 ### What we are doing and going to do
 
 - [x] Support tensorboardX.
-- [x] Support pytorch-1.0 (this branch).
 - [x] Upload the ImageNet pre-trained model.
+- [x] Provide Reference image.
 - [x] Provide checkpoint model.
 - [ ] Train PASCAL_VOC datasets
 
