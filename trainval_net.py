@@ -170,16 +170,7 @@ if __name__ == '__main__':
       args.imdb_name = "coco_2017_train"
       args.imdbval_name = "coco_2017_minival"
       args.set_cfgs = ['ANCHOR_SCALES', '[4, 8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]', 'MAX_NUM_GT_BOXES', '50']
-  elif args.dataset == "imagenet":
-      args.imdb_name = "imagenet_train"
-      args.imdbval_name = "imagenet_val"
-      args.set_cfgs = ['ANCHOR_SCALES', '[4, 8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]', 'MAX_NUM_GT_BOXES', '30']
-  elif args.dataset == "vg":
-      # train sizes: train, smalltrain, minitrain
-      # train scale: ['150-50-20', '150-50-50', '500-150-80', '750-250-150', '1750-700-450', '1600-400-20']
-      args.imdb_name = "vg_150-50-50_minitrain"
-      args.imdbval_name = "vg_150-50-50_minival"
-      args.set_cfgs = ['ANCHOR_SCALES', '[4, 8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]', 'MAX_NUM_GT_BOXES', '50']
+
 
   args.cfg_file = "cfgs/{}_{}.yml".format(args.net, args.group) if args.group != 0 else "cfgs/{}.yml".format(args.net)
 
@@ -202,24 +193,19 @@ if __name__ == '__main__':
   cfg.TRAIN.USE_FLIPPED = True
   cfg.USE_GPU_NMS = args.cuda
   
+  # create dataloader
   imdb, roidb, ratio_list, ratio_index, query = combined_roidb(args.imdb_name, True, seen=args.seen)
-
   train_size = len(roidb)
-
   print('{:d} roidb entries'.format(len(roidb)))
+  sampler_batch = sampler(train_size, args.batch_size)
+  dataset = roibatchLoader(roidb, ratio_list, ratio_index, query, args.batch_size, imdb.num_classes, training=True)
+  dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
+                            sampler=sampler_batch, num_workers=args.num_workers)
 
+  # create output directory
   output_dir = args.save_dir + "/" + args.net + "/" + args.dataset
   if not os.path.exists(output_dir):
     os.makedirs(output_dir)
-
-  sampler_batch = sampler(train_size, args.batch_size)
-
-
-
-  dataset = roibatchLoader(roidb, ratio_list, ratio_index, query, args.batch_size, imdb.num_classes, training=True)
-
-  dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
-                            sampler=sampler_batch, num_workers=args.num_workers)
 
   # initilize the tensor holder here.
   im_data = torch.FloatTensor(1)
@@ -235,6 +221,7 @@ if __name__ == '__main__':
     im_info = im_info.cuda()
     num_boxes = num_boxes.cuda()
     gt_boxes = gt_boxes.cuda()
+    cfg.CUDA = True
 
   # make variable
   im_data = Variable(im_data)
@@ -243,8 +230,6 @@ if __name__ == '__main__':
   num_boxes = Variable(num_boxes)
   gt_boxes = Variable(gt_boxes)
 
-  if args.cuda:
-    cfg.CUDA = True
 
   # initilize the network here.
   if args.net == 'vgg16':

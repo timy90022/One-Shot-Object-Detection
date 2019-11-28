@@ -169,19 +169,15 @@ if __name__ == '__main__':
   print('Using config:')
   pprint.pprint(cfg)
 
+
+  # Load dataset
   cfg.TRAIN.USE_FLIPPED = False
   imdb_vu, roidb_vu, ratio_list_vu, ratio_index_vu, query_vu = combined_roidb(args.imdbval_name, False, seen=args.seen)
   imdb_vu.competition_mode(on=True)
+  dataset_vu = roibatchLoader(roidb_vu, ratio_list_vu, ratio_index_vu, query_vu, 1, imdb_vu.num_classes, training=False, seen=args.seen)
 
 
-
-
-  input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
-  if not os.path.exists(input_dir):
-    raise Exception('There is no input directory for loading network from ' + input_dir)
-  load_name = os.path.join(input_dir,
-    'faster_rcnn_{}_{}_{}.pth'.format(args.checksession, args.checkepoch, args.checkpoint))
-
+  
   # initilize the network here.
   if args.net == 'vgg16':
     fasterRCNN = vgg16(imdb_vu.classes, pretrained=False, class_agnostic=args.class_agnostic)
@@ -194,18 +190,23 @@ if __name__ == '__main__':
   else:
     print("network is not defined")
     pdb.set_trace()
-
   fasterRCNN.create_architecture()
 
+  # Load checkpoint
+  input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
+  if not os.path.exists(input_dir):
+    raise Exception('There is no input directory for loading network from ' + input_dir)
+
+  load_name = os.path.join(input_dir,
+    'faster_rcnn_{}_{}_{}.pth'.format(args.checksession, args.checkepoch, args.checkpoint))
   print("load checkpoint %s" % (load_name))
   checkpoint = torch.load(load_name)
   fasterRCNN.load_state_dict(checkpoint['model'])
   if 'pooling_mode' in checkpoint.keys():
     cfg.POOLING_MODE = checkpoint['pooling_mode']
 
-
-  print('load model successfully!')
   # initilize the tensor holder here.
+  print('load model successfully!')
   im_data = torch.FloatTensor(1)
   query   = torch.FloatTensor(1)
   im_info = torch.FloatTensor(1)
@@ -214,6 +215,8 @@ if __name__ == '__main__':
 
   # ship to cuda
   if args.cuda:
+    cfg.CUDA = True
+    fasterRCNN.cuda()
     im_data = im_data.cuda()
     query = query.cuda()
     im_info = im_info.cuda()
@@ -226,26 +229,21 @@ if __name__ == '__main__':
   im_info = Variable(im_info)
   catgory = Variable(catgory)
   gt_boxes = Variable(gt_boxes)
-
-  if args.cuda:
-    cfg.CUDA = True
-    fasterRCNN.cuda()
-
+    
+  # record time
   start = time.time()
-  max_per_image = 100
 
+  # visiualization
   vis = args.vis
-
   if vis:
     thresh = 0.05
   else:
     thresh = 0.0
+  max_per_image = 100
 
-
+  # create output Directory
   output_dir_vu = get_output_dir(imdb_vu, 'faster_rcnn_unseen')
 
-
-  dataset_vu = roibatchLoader(roidb_vu, ratio_list_vu, ratio_index_vu, query_vu, 1, imdb_vu.num_classes, training=False, seen=args.seen)
   fasterRCNN.eval()
   for avg in range(args.average):
     dataset_vu.query_position = avg
