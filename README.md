@@ -6,7 +6,7 @@
 
 This project is a pure pytorch implementation of *One-Shot Object Detection*. A majority of the code is modified from [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch).  
 
-[**One-Shot Object Detection with Co-Attention and Co-Excitation**]()  
+[**One-Shot Object Detection with Co-Attention and Co-Excitation**](https://arxiv.org/abs/1911.12529)  
 Ting-I Hsieh, Yi-Chen Lo, Hwann-Tzong Chen, Tyng-Luh Liu
 Neural Information Processing Systems (NeurIPS), 2019
 
