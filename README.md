@@ -28,6 +28,7 @@ git clone https://github.com/timy90022/One-Shot-Object-Detection.git
 
 ### 1. Prerequisites
 
+* Ubuntu 16.04
 * Python or 3.6
 * Pytorch 1.0
 
