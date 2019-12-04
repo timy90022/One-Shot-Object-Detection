@@ -114,7 +114,7 @@ python trainval_net.py --dataset coco --net res50 \
 
 ## Test
 
-If you want to evlauate the detection performance of ResNet50 model on COCO test set, you can train by yourself or download the models from [Google Drive](https://drive.google.com/file/d/1O1AQtjozgpdtuETGE6X4UItpqcVPUiXH/view?usp=sharing) 
+If you want to evlauate the detection performance of ResNet50 model on COCO test set, you can train by yourself or download the models from [Google Drive](https://drive.google.com/file/d/1FV7TpTSgF0pwGxshqUSK-AvhXHSAObo4/view?usp=sharing) 
 and unzip them into the ```./models/res50/```.
 
 Simply run
