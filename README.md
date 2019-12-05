@@ -159,7 +159,7 @@ Code is based on [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-r
 				Chen, Hwann-Tzong and 
 				Liu, Tyng-Luh},
   booktitle = {Advances in Neural Information Processing Systems 32},
-  year 		= {2019},
+  year 	= {2019},
   publisher = {Curran Associates, Inc.}
 }
 
