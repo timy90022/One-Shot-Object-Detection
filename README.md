@@ -154,13 +154,10 @@ Code is based on [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-r
 ```
 @incollection{NIPS2019_8540,
   title 	= {One-Shot Object Detection with Co-Attention and Co-Excitation},
-  author 	= {Hsieh, Ting-I and 
-				Lo, Yi-Chen and 
-				Chen, Hwann-Tzong and 
-				Liu, Tyng-Luh},
-  booktitle = {Advances in Neural Information Processing Systems 32},
+  author 	= {Hsieh, Ting-I and Lo, Yi-Chen and Chen, Hwann-Tzong and Liu, Tyng-Luh},
+  booktitle 	= {Advances in Neural Information Processing Systems 32},
   year		= {2019},
-  publisher = {Curran Associates, Inc.}
+  publisher 	= {Curran Associates, Inc.}
 }
 
 ```
