@@ -148,3 +148,19 @@ python test_net.py --s 2  --g 2 --a 4 --cuda
 ## Acknowledgments
 
 Code is based on [jwyang/faster-rcnn.pytorch](https://github.com/jwyang/faster-rcnn.pytorch) and [AlexHex7/Non-local_pytorch](https://github.com/AlexHex7/Non-local_pytorch). 
+
+## Citation
+
+```
+@incollection{NIPS2019_8540,
+  title 	= {One-Shot Object Detection with Co-Attention and Co-Excitation},
+  author 	= {Hsieh, Ting-I and 
+				Lo, Yi-Chen and 
+				Chen, Hwann-Tzong and 
+				Liu, Tyng-Luh},
+  booktitle = {Advances in Neural Information Processing Systems 32},
+  year 		= {2019},
+  publisher = {Curran Associates, Inc.}
+}
+
+```
