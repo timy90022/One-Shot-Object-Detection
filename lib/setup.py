@@ -3,15 +3,23 @@
 
 import glob
 import os
+import numpy as np
 
 import torch
 from setuptools import find_packages
-from setuptools import setup
+from setuptools import setup, Extension
 from torch.utils.cpp_extension import CUDA_HOME
 from torch.utils.cpp_extension import CppExtension
 from torch.utils.cpp_extension import CUDAExtension
 
 requirements = ["torch", "torchvision"]
+
+
+# Obtain the numpy include directory.  This logic works across numpy versions.
+try:
+    numpy_include = np.get_include()
+except AttributeError:
+    numpy_include = np.get_numpy_include()
 
 
 def get_extensions():
@@ -50,7 +58,15 @@ def get_extensions():
             include_dirs=include_dirs,
             define_macros=define_macros,
             extra_compile_args=extra_compile_args,
-        )
+        ),
+        Extension(
+        'pycocotools._mask',
+        sources=['pycocotools/maskApi.c', 'pycocotools/_mask.pyx'],
+        include_dirs = [numpy_include, 'pycocotools'],
+        extra_compile_args={
+            'cxx': [],
+            'gcc': ['-Wno-cpp', '-Wno-unused-function', '-std=c99']},
+    ),
     ]
 
     return ext_modules
