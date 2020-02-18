@@ -1,9 +1,11 @@
 cython
 cffi
 opencv-python
-scipy
+scipy==1.1.0
 msgpack
 easydict
 matplotlib
 pyyaml
 tensorboardX
+pandas
+pillow==6.1.0
