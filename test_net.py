@@ -272,11 +272,11 @@ if __name__ == '__main__':
     else:
       for i,index in enumerate(ratio_index_vu[0]):
         data = next(data_iter_vu)
-        im_data.data.resize_(data[0].size()).copy_(data[0])
-        query.data.resize_(data[1].size()).copy_(data[1])
-        im_info.data.resize_(data[2].size()).copy_(data[2])
-        gt_boxes.data.resize_(data[3].size()).copy_(data[3])
-        catgory.data.resize_(data[4].size()).copy_(data[4])
+        im_data.resize_(data[0].size()).copy_(data[0])
+        query.resize_(data[1].size()).copy_(data[1])
+        im_info.resize_(data[2].size()).copy_(data[2])
+        gt_boxes.resize_(data[3].size()).copy_(data[3])
+        catgory.resize_(data[4].size()).copy_(data[4])
 
 
         # Run Testing
